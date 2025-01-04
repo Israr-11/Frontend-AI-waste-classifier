@@ -8,7 +8,7 @@ const OverviewSection = () => {
           How It Works
         </h2>
         <p className="text-lg text-gray-600 mb-12">
-          Our AI-based waste recycling assistant helps you properly recycle waste. Upload an image, let our AI model analyze it, and receive instant recycling instructions. You can also provide feedback to improve the system.
+          Our AI-based waste classifier helps you properly recycle waste. Upload an image, let our AI model analyze it, and receive instant recycling instructions. You can also provide feedback to improve the system.
         </p>
 
         {/* Steps */}

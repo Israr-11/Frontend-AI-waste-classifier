@@ -8,7 +8,7 @@ const CustomFooter = () => {
     <Footer container>
         <div className="w-full justify-between sm:flex sm:items-center sm:justify-between">
          
-        <Footer.Copyright href="#" by="AI recycle assistant" year={2024} />
+        <Footer.Copyright href="#" by="AI waste classifier" year={2024} />
       </div>
     </Footer>
   );

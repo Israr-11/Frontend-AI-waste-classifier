@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import Cropper from 'react-easy-crop';
-//import axios from 'axios';
+import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -14,8 +14,6 @@ const Process = () => {
   const [preview, setPreview] = useState(null);
   const [aspectX, setAspectX] = useState(1);
   const [aspectY, setAspectY] = useState(1);
-  const [originalFileName, setOriginalFileName] = useState('');
-
 
   const [brightness, setBrightness] = useState(100);
   const [contrast, setContrast] = useState(100);
@@ -32,13 +30,10 @@ const Process = () => {
 
   // State to control feedback button visibility
   const [isFeedbackVisible, setIsFeedbackVisible] = useState(false);
-  console.log(isFeedbackVisible)
-
-
+   console.log(isFeedbackVisible)
   const handleCapture = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setOriginalFileName(file.name);
       setImage(URL.createObjectURL(file));
     }
   };
@@ -97,49 +92,26 @@ const Process = () => {
 
   const handleUpload = async () => {
     if (!croppedImage) return;
-    
+
+    const formData = new FormData();
+    formData.append('image_file', croppedImage);
+
     setLoading(true);
-    
-    // Get the file name from the original upload
-    const fileName = originalFileName.toLowerCase();
-    const file=fileName.split('.')[0];
-    console.log('File Name:', file);
-    
-    // Dummy response logic
-    let dummyResponse = {
-      isWaste: "Don't know  👀 🤷‍♀️",
-      instructions: 'I am not really trained for this. I am just a dummy.',
-      recyclable: "Wait untill I get trained. 🤖",
-    };
-  
-    if (file.includes('caty')) {
-      dummyResponse = {
-        isWaste: "No",
-        instructions: "This is not waste. It's a living being!",
-        recyclable: "No"
-      };
-    } else if (file.includes('pepsi')) {
-      dummyResponse = {
-        isWaste: "Yes",
-        instructions: "This is recyclable waste. Please clean and place in recycling bin.",
-        recyclable: "Yes"
-      };
-    } else if (file.includes('burger')) {
-      dummyResponse = {
-        isWaste: "No",
-        instructions: "This is food waste. Please dispose in organic waste bin.",
-        recyclable: "No"
-      };
-    }
-  
-    // Simulate API delay
-    setTimeout(() => {
-      setApiData(dummyResponse);
-      setIsFeedbackVisible(true);
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/upload_image', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      setApiData(response.data.image_details); // Store API response data
+      setIsFeedbackVisible(true); // Show feedback button upon successful API response
+      console.log('API response:', apiData);
+    } catch (error) {
+      console.error('Error uploading the image', error);
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
-  
 
   // Handle feedback submission
   const handleFeedbackSubmit = () => {
@@ -334,8 +306,6 @@ const Process = () => {
   </div>
 )}
 
-
-
 {isModalOpen && (
         <div className="modal bg-black bg-opacity-50 fixed inset-0 flex items-center justify-center">
           <div className="modal-content bg-white p-8 rounded-lg shadow-lg w-1/3">
@@ -379,4 +349,5 @@ const Process = () => {
     </div>
   );
 };
+
 export default Process;
