@@ -1,40 +1,91 @@
 import { Button, Modal } from "flowbite-react";
 import { useState } from "react";
-import { Link } from "react-router-dom"; // Import Link for routing
+import { Link } from "react-router-dom";
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const CustomHeader = () => {
   const [openModal, setOpenModal] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const navLinks = [
+    { name: 'Disclaimer', action: () => setOpenModal(true) },
+    { name: 'Flow', path: '/flow' },
+    { name: 'Results', path: '/results' },
+    { name: 'Processing', path: '/process' }
+  ];
 
   return (
     <div>
       <nav className="bg-transparent py-4">
-        <div className="container mx-auto flex items-center justify-between">
-          <Link className="text-black font-bold text-lg ml-24 sm:ml-12" to="/">
+        <div className="container mx-auto flex items-center justify-between px-4">
+          <Link className="text-black font-bold text-lg" to="/">
             <i>AI Waste Classifier</i>
           </Link>
 
-          <div className="hidden lg:flex space-x-12 items-center mr-24">
-            <Link
-              className="text-black font-bold hover:text-green-500 cursor-pointer"
-              onClick={() => setOpenModal(true)}
-            >
-              Disclaimer
-            </Link>
-            {/* Use Link to navigate between pages */}
-            <Link className="text-black font-bold hover:text-green-500" to="/flow">
-              Flow
-            </Link>
+          {/* Mobile Menu Button */}
+          <button
+            className="lg:hidden text-black"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? (
+              <XMarkIcon className="h-6 w-6" />
+            ) : (
+              <Bars3Icon className="h-6 w-6" />
+            )}
+          </button>
 
-            <Link className="text-black font-bold hover:text-green-500" to="/results">
-              Results
-            </Link>
-            
-
-            <Link className="text-black font-bold hover:text-green-500" to="/process">
-              Processing
-            </Link>
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex space-x-12 items-center">
+            {navLinks.map((link, index) => (
+              link.path ? (
+                <Link 
+                  key={index}
+                  className="text-black font-bold hover:text-green-500" 
+                  to={link.path}
+                >
+                  {link.name}
+                </Link>
+              ) : (
+                <button
+                  key={index}
+                  className="text-black font-bold hover:text-green-500"
+                  onClick={link.action}
+                >
+                  {link.name}
+                </button>
+              )
+            ))}
           </div>
         </div>
+
+        {/* Mobile Navigation Menu */}
+        {isMenuOpen && (
+          <div className="lg:hidden absolute top-16 left-0 right-0 bg-white shadow-lg py-4 z-50">
+            {navLinks.map((link, index) => (
+              <div key={index} className="px-4 py-2">
+                {link.path ? (
+                  <Link 
+                    className="text-black font-bold hover:text-green-500 block"
+                    to={link.path}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {link.name}
+                  </Link>
+                ) : (
+                  <button
+                    className="text-black font-bold hover:text-green-500 block w-full text-left"
+                    onClick={() => {
+                      link.action();
+                      setIsMenuOpen(false);
+                    }}
+                  >
+                    {link.name}
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </nav>
 
       {/* Modal Component */}
