@@ -36,13 +36,25 @@ useEffect(() => {
 // Add these new functions before return statement
 const startCamera = async () => {
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'environment' }
-    });
+    const constraints = {
+      video: {
+        facingMode: 'environment',
+        width: { ideal: 1920 },
+        height: { ideal: 1080 }
+      }
+    };
+    
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    const videoElement = document.querySelector('video');
+    if (videoElement) {
+      videoElement.srcObject = stream;
+      videoElement.play();
+    }
     setCameraStream(stream);
     return stream;
   } catch (err) {
-    toast.error("Camera access failed");
+    console.error("Camera error:", err);
+    toast.error("Camera access failed. Please check permissions.");
   }
 };
 
@@ -187,7 +199,37 @@ const capturePhoto = () => {
       </svg>
       Take Photo
     </button>
-    
+{showCameraSelect && (
+  <div className="relative w-full h-[300px] md:h-[400px]">
+    <video
+      autoPlay
+      playsInline
+      muted
+      ref={video => {
+        if (video) {
+          video.srcObject = cameraStream;
+        }
+      }}
+      onLoadedMetadata={(e) => e.target.play()}
+      className="w-full h-full object-cover rounded-lg"
+    />
+    <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-4">
+      <button
+        onClick={capturePhoto}
+        className="px-6 py-2 bg-green-800 rounded-full text-white hover:bg-green-900 transition"
+      >
+        Capture
+      </button>
+      <button
+        onClick={stopCamera}
+        className="px-6 py-2 bg-red-500 rounded-full text-white hover:bg-red-600 transition"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+)}
+
     <div className="w-full md:w-1/2">
       <input
         type="file"
