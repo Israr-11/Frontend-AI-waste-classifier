@@ -16,7 +16,7 @@ function App() {
       <CustomNavbar />
       
       <Routes>
-        {/* Home Page */}
+        {/* Home Page Route*/}
         <Route path="/" element={<>
           <HeroSection />
           <OverviewSection />
