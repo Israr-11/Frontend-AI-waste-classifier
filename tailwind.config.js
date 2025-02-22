@@ -5,7 +5,12 @@ module.exports = {
     "./node_modules/flowbite/**/*.js"
   ],
   theme: {
-    extend: {},
+    extend: {
+      animation: {
+        fadeIn: 'fadeIn 0.5s ease-in',
+      }
+
+    },
   },
   plugins: [
     require('flowbite/plugin')

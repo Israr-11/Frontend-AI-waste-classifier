@@ -5,8 +5,9 @@ import CustomNavbar from './components/Navbar';
 import HeroSection from './components/Hero';
 import OverviewSection from './components/Overview';
 import WhyThisSection from './components/WhyThis';
-import Process from './components/core/Process';
+import Process from './components/core/ProcessReal';
 import Flow from './components/Flow';
+import ResultsPage from './components/Results';
 
 function App() {
   return (
@@ -24,7 +25,7 @@ function App() {
 
         <Route path="/process" element={<Process />} />
         <Route path="/flow" element={<Flow />} />
-
+        <Route path="/results" element={<ResultsPage />} />
 
       </Routes>
       

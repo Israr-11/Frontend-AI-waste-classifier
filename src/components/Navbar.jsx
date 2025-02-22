@@ -24,6 +24,12 @@ const CustomHeader = () => {
             <Link className="text-black font-bold hover:text-green-500" to="/flow">
               Flow
             </Link>
+
+            <Link className="text-black font-bold hover:text-green-500" to="/results">
+              Results
+            </Link>
+            
+
             <Link className="text-black font-bold hover:text-green-500" to="/process">
               Processing
             </Link>
