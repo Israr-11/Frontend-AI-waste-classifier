@@ -60,7 +60,7 @@ const CustomHeader = () => {
 
         {/* Mobile Navigation Menu */}
         {isMenuOpen && (
-          <div className="lg:hidden absolute top-16 left-0 right-0 bg-white shadow-lg py-4 z-50">
+          <div className="lg:hidden absolute top-22 left-0 right-0 bg-white shadow-lg py-4 z-50">
             {navLinks.map((link, index) => (
               <div key={index} className="px-4 py-2">
                 {link.path ? (
