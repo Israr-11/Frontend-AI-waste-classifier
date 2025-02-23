@@ -369,15 +369,21 @@ const capturePhoto = () => {
         </div>
       )}
 
-      <div className="controls mb-6">
-        <button
-          onClick={handleUpload}
-          className="px-6 py-3 bg-green-500 text-white rounded-full hover:bg-blue-600 transition"
-          disabled={loading}
-        >
-          {loading ? 'Uploading...' : 'Upload Image'}
-        </button>
-      </div>
+<div className="controls mb-6">
+  <button
+    onClick={handleUpload}
+    className="w-full md:w-auto px-6 py-3 bg-green-500 text-white rounded-full hover:bg-blue-600 transition touch-action-manipulation"
+    disabled={loading}
+    type="button"
+    aria-label="Upload Image"
+  >
+    <span className="pointer-events-none">
+      {loading ? 'Uploading...' : 'Upload Image'}
+    </span>
+  </button>
+</div>
+
+
 
       {apiData && (
   <div className="fixed inset-0 flex items-center justify-center z-[9999] p-4 overflow-y-auto">
