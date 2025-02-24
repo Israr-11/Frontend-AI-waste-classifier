@@ -8,6 +8,8 @@ import WhyThisSection from './components/WhyThis';
 import Process from './components/core/ProcessReal';
 import Flow from './components/Flow';
 import ResultsPage from './components/Results';
+import Statistics from './components/Statistics';
+
 
 function App() {
   return (
@@ -26,6 +28,7 @@ function App() {
         <Route path="/process" element={<Process />} />
         <Route path="/flow" element={<Flow />} />
         <Route path="/results" element={<ResultsPage />} />
+        <Route path="/statistics" element={<Statistics/>} />
 
       </Routes>
       

@@ -8,14 +8,13 @@ function FeedbackForm({ onClose }) {
   
   // Get all required data from localStorage
   const imageHash = localStorage.getItem('currentImageHash');
-  const prediction = localStorage.getItem('currentPrediction');
+  //const prediction = localStorage.getItem('currentPrediction');
 
   const handleSubmit = async () => {
     const feedbackData = {
       image_hash: imageHash,
-      original_prediction: prediction,
-      user_feedback: feedback,
-      correct_classification: feedback === "No" ? correctCategory : null
+      is_correct: feedback, // directly use "Yes" or "No"
+      ...(feedback === "No" && { correct_category: correctCategory }) // only include if No
     };
 
     try {
@@ -25,22 +24,20 @@ function FeedbackForm({ onClose }) {
         body: JSON.stringify(feedbackData)
       });
       
-      // Clear localStorage after successful submission
       localStorage.removeItem('currentImageHash');
-      localStorage.removeItem('currentPrediction');
-      
       toast.success('Feedback submitted successfully!');
       onClose();
     } catch (error) {
       toast.error('Error submitting feedback');
       console.error('Error submitting feedback:', error);
     }
-  };
+};
+
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-xl">
       <h2 className="text-2xl font-bold mb-4 text-gray-800">Provide Feedback</h2>
-      <p className="mb-4 text-gray-700">Prediction: {prediction}</p>
+      {/* <p className="mb-4 text-gray-700">Prediction: {prediction}</p> */}
       
       <div className="mb-4">
         <label className="block text-gray-700 mb-2">Is this correct?</label>

@@ -18,6 +18,7 @@ const Process = () => {
   const [aspectX, setAspectX] = useState(1);
   const [aspectY, setAspectY] = useState(1);
 
+
   const [brightness, setBrightness] = useState(100);
   const [contrast, setContrast] = useState(100);
   const [grayscale, setGrayscale] = useState(0);
@@ -27,6 +28,7 @@ const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 // eslint-disable-next-line
 const [showCameraSelect, setShowCameraSelect] = useState(false);
 const [cameraStream, setCameraStream] = useState(null);
+
 
 useEffect(() => {
   const handleResize = () => {
@@ -179,9 +181,11 @@ const capturePhoto = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      setApiData(response.data.image_details);
+      setApiData(response.data.recycling_instructions);
       // Store image hash in localStorage
-      localStorage.setItem('ImagePrediction', response.data);
+      console.log("response.data.recycling_instructions:", response.data.recycling_instructions);
+      localStorage.setItem('currentImageHash', response.data.image_hash);
+      localStorage.setItem('currentPrediction', response.data.recycling_instructions);
       setIsFeedbackVisible(true);
     } catch (error) {
       console.error('Error uploading the image', error);
@@ -471,7 +475,24 @@ const capturePhoto = () => {
   </div>
 )}
 
-
+{loading && (
+  <div className="fixed inset-0 flex items-center justify-center z-[9999] backdrop-blur-sm">
+    <div className="bg-white/90 p-8 rounded-2xl shadow-2xl flex flex-col items-center space-y-4">
+      <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-green-500"></div>
+      <div className="animate-pulse bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent text-xl font-bold">
+        Processing Your Image
+      </div>
+      <div className="text-gray-600 text-sm text-center max-w-xs">
+        Our AI is analyzing your waste image with cutting-edge technology 🌱
+      </div>
+      <div className="flex space-x-1">
+        <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce"></div>
+        <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce delay-100"></div>
+        <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce delay-200"></div>
+      </div>
+    </div>
+  </div>
+)}
       {/* Toast Container */}
       <ToastContainer />
     </div>

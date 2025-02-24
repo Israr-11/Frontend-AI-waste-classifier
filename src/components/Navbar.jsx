@@ -11,7 +11,8 @@ const CustomHeader = () => {
     { name: 'Disclaimer', action: () => setOpenModal(true) },
     { name: 'Flow', path: '/flow' },
     { name: 'Results', path: '/results' },
-    { name: 'Processing', path: '/process' }
+    { name: 'Processing', path: '/process' },
+    {name:'Statistics', path:'/statistics'}
   ];
 
   return (
