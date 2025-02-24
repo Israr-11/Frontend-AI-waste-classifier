@@ -3,6 +3,9 @@ import Cropper from 'react-easy-crop';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import FeedbackForm from './FeedBackForm';
+import { checkImageQuality, getImageBrightness } from '../core/ImageQualityCheck'
+
 
 const Process = () => {
   const [image, setImage] = useState(null);
@@ -84,18 +87,33 @@ const capturePhoto = () => {
 
   // Feedback modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [rating, setRating] = useState(5);
-  const [feedbackText, setFeedbackText] = useState('');
+
 
   // State to control feedback button visibility
   const [isFeedbackVisible, setIsFeedbackVisible] = useState(false);
    console.log(isFeedbackVisible)
-  const handleCapture = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImage(URL.createObjectURL(file));
-    }
-  };
+
+   // In your handleCapture function:
+   const handleCapture = async (e) => {
+     const file = e.target.files[0];
+     if (file) {
+       const qualityCheck = await checkImageQuality(file);
+       const brightnessCheck = await getImageBrightness(file);
+   
+       if (!qualityCheck.isValid) {
+         toast.error(qualityCheck.messages.join('\n'));
+         return;
+       }
+   
+       if (!brightnessCheck.isAcceptable) {
+         toast.warning('Image brightness is not optimal. Please use better lighting.');
+         return;
+       }
+   
+       setImage(URL.createObjectURL(file));
+     }
+   };
+   
 
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
@@ -151,10 +169,9 @@ const capturePhoto = () => {
 
   const handleUpload = async () => {
     if (!croppedImage) return;
-
     const formData = new FormData();
     formData.append('image_file', croppedImage);
-
+  
     setLoading(true);
     try {
       const response = await axios.post('http://127.0.0.1:8000/upload_image', formData, {
@@ -162,23 +179,18 @@ const capturePhoto = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      setApiData(response.data.image_details); // Store API response data
-      setIsFeedbackVisible(true); // Show feedback button upon successful API response
-      console.log('API response:', apiData);
+      setApiData(response.data.image_details);
+      // Store image hash in localStorage
+      localStorage.setItem('ImagePrediction', response.data);
+      setIsFeedbackVisible(true);
     } catch (error) {
       console.error('Error uploading the image', error);
     } finally {
       setLoading(false);
     }
   };
+  
 
-  // Handle feedback submission
-  const handleFeedbackSubmit = () => {
-    toast.success('Feedback submitted successfully!');
-    setIsModalOpen(false);
-    setRating(5);
-    setFeedbackText('');
-  };
 
   return (
     <div className="container mx-auto p-8 bg-gradient-to-r from-green-400 to-green-600 rounded-xl shadow-lg text-white">
@@ -449,46 +461,12 @@ const capturePhoto = () => {
   <div className="fixed inset-0 flex items-center justify-center z-[9999] p-4">
     <div className="absolute inset-0 bg-black opacity-50"></div>
     <div className="relative bg-white p-4 md:p-8 rounded-lg shadow-lg w-full max-w-md mx-4">
-      <h3 className="text-lg md:text-xl font-bold mb-4 text-gray-800">Rate and Provide Feedback</h3>
-      
-      <div className="space-y-4">
-        <div>
-          <label className="block mb-2 text-sm md:text-base font-medium text-gray-700">Rating (1-5):</label>
-          <input
-            type="number"
-            value={rating}
-            onChange={(e) => setRating(e.target.value)}
-            className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            min="1"
-            max="5"
-          />
-        </div>
-
-        <div>
-          <label className="block mb-2 text-sm md:text-base font-medium text-gray-700">Your Feedback:</label>
-          <textarea
-            value={feedbackText}
-            onChange={(e) => setFeedbackText(e.target.value)}
-            className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            rows="4"
-          />
-        </div>
-
-        <div className="flex flex-col md:flex-row justify-end gap-3 pt-4">
-          <button
-            onClick={handleFeedbackSubmit}
-            className="w-full md:w-auto px-6 py-2 bg-green-600 text-white rounded-full hover:bg-green-700 transition-colors duration-200"
-          >
-            Submit
-          </button>
-          <button
-            onClick={() => setIsModalOpen(false)}
-            className="w-full md:w-auto px-6 py-2 bg-gray-500 text-white rounded-full hover:bg-gray-600 transition-colors duration-200"
-          >
-            Close
-          </button>
-        </div>
-      </div>
+      <FeedbackForm 
+        onClose={() => {
+          setIsModalOpen(false);
+          setApiData(null);
+        }}
+      />
     </div>
   </div>
 )}
