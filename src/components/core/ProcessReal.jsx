@@ -372,7 +372,7 @@ const capturePhoto = () => {
       <div className="controls mb-6">
         <button
           onClick={handleCropAndPreview}
-          className="w-full md:w-auto px-6 py-3 bg-green-500 text-white rounded-full hover:bg-blue-600 transition touch-action-manipulation"
+          className="w-full md:w-auto px-6 py-3 lg:mt-2 bg-green-500 text-white rounded-full hover:bg-blue-600 transition touch-action-manipulation"
         >
           Preview Crop
         </button>
