@@ -10,7 +10,7 @@ const CustomHeader = () => {
   const navLinks = [
     { name: 'Disclaimer', action: () => setOpenModal(true) },
     { name: 'Flow', path: '/flow' },
-    { name: 'Results', path: '/results' },
+    //{ name: 'Results', path: '/results' },
     { name: 'Processing', path: '/process' },
     {name:'Statistics', path:'/statistics'}
   ];
