@@ -10,6 +10,7 @@ const CustomHeader = () => {
   const navLinks = [
     { name: "Disclaimer", action: () => setOpenModal(true) },
     { name: "Flow", path: "/flow" },
+    { name: "Documentation", externalLink: "https://ai-waste-classifier-documentation.netlify.app/" },
     { name: "Processing", path: "/process" },
     { name: "Statistics", path: "/statistics" },
   ];
@@ -34,25 +35,41 @@ const CustomHeader = () => {
           </button>
 
           <div className="hidden lg:flex space-x-12 items-center">
-            {navLinks.map((link, index) =>
-              link.path ? (
-                <Link
-                  key={index}
-                  className="text-black font-bold hover:text-green-500"
-                  to={link.path}
-                >
-                  {link.name}
-                </Link>
-              ) : (
-                <button
-                  key={index}
-                  className="text-black font-bold hover:text-green-500"
-                  onClick={link.action}
-                >
-                  {link.name}
-                </button>
-              )
-            )}
+            {navLinks.map((link, index) => {
+              if (link.path) {
+                return (
+                  <Link
+                    key={index}
+                    className="text-black font-bold hover:text-green-500"
+                    to={link.path}
+                  >
+                    {link.name}
+                  </Link>
+                );
+              } else if (link.externalLink) {
+                return (
+                  <a
+                    key={index}
+                    className="text-black font-bold hover:text-green-500"
+                    href={link.externalLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {link.name}
+                  </a>
+                );
+              } else {
+                return (
+                  <button
+                    key={index}
+                    className="text-black font-bold hover:text-green-500"
+                    onClick={link.action}
+                  >
+                    {link.name}
+                  </button>
+                );
+              }
+            })}
           </div>
         </div>
 
@@ -69,6 +86,16 @@ const CustomHeader = () => {
                   >
                     {link.name}
                   </Link>
+                ) : link.externalLink ? (
+                  <a
+                    className="text-black font-bold hover:text-green-500 block"
+                    href={link.externalLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {link.name}
+                  </a>
                 ) : (
                   <button
                     className="text-black font-bold hover:text-green-500 block w-full text-left"
