@@ -8,9 +8,9 @@ const HeroSection = () => {
           AI Based Waste Classifier
         </h1>
         <p className="text-lg text-gray-700 mb-6">
-          A smart tool for recycling waste and promoting eco-friendly recycling. Upload images of waste and get instant recycling instructions.
+          A smart tool for recycling waste and promoting eco-friendly recycling.
+          Upload images of waste and get instant recycling instructions.
         </p>
-        {/* Using flex for centering the button */}
         <div className="flex justify-center">
           <Button className="bg-green-700 text-white hover:bg-green-800 shadow-lg py-2 px-6 transition-all duration-300 ease-in-out transform hover:scale-105">
             Get Started
